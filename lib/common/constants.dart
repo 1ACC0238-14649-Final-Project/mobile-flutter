@@ -4,6 +4,8 @@ class Constants {
   static const String signUpEndpoint = '/api/v1/User/sign-up';
   static const String loginEndpoint = '/api/v1/User/login';
   static const String meEndpoint = '/api/v1/User/me';
+  static const String createGigEndpoint = '/api/v1/Gig';
+  static const String getGigsBySellerEndpoint = '/api/v1/Gig/seller';
 
   static const String dbName = 'user_auth.db';
   static const int dbVersion = 1;

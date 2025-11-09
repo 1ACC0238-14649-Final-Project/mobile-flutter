@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../user/presentation/login_screen.dart';
 import '../user/presentation/register_screen.dart';
-import '../user/presentation/profile_screen.dart';
 import '../user/data/repository/user_repository.dart';
+import 'main_screen.dart';
 
 class AppNavigation extends StatefulWidget {
   const AppNavigation({super.key});
@@ -11,7 +11,7 @@ class AppNavigation extends StatefulWidget {
   State<AppNavigation> createState() => _AppNavigationState();
 }
 
-enum RouteKey { login, register, profile }
+enum RouteKey { login, register, main }
 
 class _AppNavigationState extends State<AppNavigation> {
   RouteKey route = RouteKey.login;
@@ -26,7 +26,7 @@ class _AppNavigationState extends State<AppNavigation> {
     final repo = UserRepository();
     final u = await repo.getCachedUser();
     if (u != null) {
-      setState(() => route = RouteKey.profile);
+      setState(() => route = RouteKey.main);
     } else {
       setState(() => route = RouteKey.login);
     }
@@ -37,7 +37,7 @@ class _AppNavigationState extends State<AppNavigation> {
     switch (route) {
       case RouteKey.login:
         return LoginScreen(
-          onLoggedIn: () => setState(() => route = RouteKey.profile),
+          onLoggedIn: () => setState(() => route = RouteKey.main),
           onGoToRegister: () => setState(() => route = RouteKey.register),
         );
       case RouteKey.register:
@@ -45,8 +45,8 @@ class _AppNavigationState extends State<AppNavigation> {
           onRegistered: () => setState(() => route = RouteKey.login),
           onBackToLogin: () => setState(() => route = RouteKey.login),
         );
-      case RouteKey.profile:
-        return ProfileScreen(onLogout: () => setState(() => route = RouteKey.login));
+      case RouteKey.main:
+        return MainScreen(onLogout: () => setState(() => route = RouteKey.login));
     }
   }
 }
