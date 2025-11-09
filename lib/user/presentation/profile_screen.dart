@@ -62,13 +62,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     if (error != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Perfil')),
+        appBar: AppBar(
+          title: const Text(
+            'Perfil',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          backgroundColor: const Color(0xFF1E3A5F), // Azul oscuro
+          elevation: 0,
+          centerTitle: true,
+        ),
         body: Center(child: Text(error!)),
       );
     }
     final u = me;
     return Scaffold(
-      appBar: AppBar(title: const Text('Perfil')),
+      appBar: AppBar(
+        title: const Text(
+          'Perfil',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        backgroundColor: const Color(0xFF1E3A5F), // Azul oscuro
+        elevation: 0,
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

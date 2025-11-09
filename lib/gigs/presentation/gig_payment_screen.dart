@@ -176,11 +176,20 @@ class _GigPaymentScreenState extends State<GigPaymentScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Gig'),
+        title: const Text(
+          'New Gig',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        backgroundColor: const Color(0xFF1E3A5F), // Azul oscuro
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.chevron_left, color: Colors.white),
           onPressed: isLoading ? null : widget.onBack,
         ),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: SingleChildScrollView(

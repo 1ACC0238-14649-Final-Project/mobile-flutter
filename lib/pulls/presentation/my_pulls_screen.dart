@@ -92,13 +92,22 @@ class _MyPullsScreenState extends State<MyPullsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Pulls'),
+        title: const Text(
+          'My Pulls',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        backgroundColor: const Color(0xFF1E3A5F), // Azul oscuro
+        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: _loadPulls,
           ),
         ],
+        centerTitle: true,
       ),
       body: _isLoading
           ? const Center(
