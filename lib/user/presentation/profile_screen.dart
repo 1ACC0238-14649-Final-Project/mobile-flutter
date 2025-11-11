@@ -93,9 +93,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // -----------------------------------------
-            // FOTO + NOMBRE + EMAIL
-            // -----------------------------------------
             Center(
               child: Column(
                 children: [
@@ -123,9 +120,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 30),
 
-            // -----------------------------------------
-            // SECTION 1: MORE
-            // -----------------------------------------
             _buildCard(
               title: "More",
               child: InkWell(
@@ -155,9 +149,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 20),
 
-            // -----------------------------------------
-            // SECTION 2: MY ACCOUNT
-            // -----------------------------------------
             _buildCard(
               title: "My Account",
               child: InkWell(
@@ -189,9 +180,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 20),
 
-            // -----------------------------------------
-            // SECTION 3: SETTINGS
-            // -----------------------------------------
             _buildCard(
               title: "Settings",
               child: InkWell(
@@ -221,9 +209,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 20),
 
-            // -----------------------------------------
-            // SECTION 4: BRIEFCASE
-            // -----------------------------------------
             _buildCard(
               title: "Briefcase",
               child: InkWell(
@@ -250,9 +235,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // -----------------------------------------
-  // CARD BUILDER
-  // -----------------------------------------
   Widget _buildCard({
     required String title,
     required Widget child,
