@@ -45,7 +45,13 @@ class _MainScreenState extends State<MainScreen> {
       case MainTab.pulls:
         return const MyPullsScreen();
       case MainTab.profile:
-        return ProfileScreen(onLogout: widget.onLogout);
+        return ProfileScreen(
+          onLogout: widget.onLogout,
+          onAddPull: () {
+            setState(() => _currentTab = MainTab.create);
+          },
+        );
+
     }
   }
 
