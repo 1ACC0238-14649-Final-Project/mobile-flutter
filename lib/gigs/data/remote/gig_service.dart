@@ -43,22 +43,34 @@ class GigService {
         'Accept': 'application/json',
       },
     );
+
     if (res.statusCode == 200) {
       final body = res.body.trim();
-      if (body.startsWith('[')) {
-        final list = jsonDecode(body) as List;
+      final decoded = jsonDecode(body);
+
+      if (decoded is List) {
+        return decoded.map((e) => GigDto.fromJson(e)).toList();
+      }
+
+      if (decoded is Map<String, dynamic> && decoded['data'] is List) {
+        final list = decoded['data'] as List;
         return list.map((e) => GigDto.fromJson(e)).toList();
       }
+
       return [];
     }
+
     if (res.statusCode == 401) {
       throw Exception('Unauthorized.');
     }
     if (res.statusCode == 404) {
       return [];
     }
-    throw Exception('HTTP ${res.statusCode}: ${jsonDecodeSafe(res.body) ?? 'Failed to fetch gigs.'}');
+
+    throw Exception(
+        'HTTP ${res.statusCode}: ${jsonDecodeSafe(res.body) ?? 'Failed to fetch gigs.'}');
   }
+
 
   Future<GigDto> getGigById(String token, String gigId) async {
     final uri = Uri.parse('${Constants.baseUrl}${Constants.createGigEndpoint}/$gigId');

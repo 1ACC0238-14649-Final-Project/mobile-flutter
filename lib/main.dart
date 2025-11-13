@@ -21,6 +21,7 @@ class UserAuthApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'User Auth',
       theme: buildLightTheme(),
       darkTheme: buildDarkTheme(),
