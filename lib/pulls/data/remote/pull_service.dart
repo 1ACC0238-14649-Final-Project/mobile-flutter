@@ -2,16 +2,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../common/constants.dart';
 import 'pull_dto.dart';
+import 'dart:developer' as developer;
 
 class PullService {
   final http.Client _client;
   PullService({http.Client? client}) : _client = client ?? http.Client();
 
   Future<List<PullDto>> getPullsByRole(
-    String token,
-    String role,
-    int userId,
-  ) async {
+      String token,
+      String role,
+      int userId,
+      ) async {
     // Intentar primero con /api/Pull/by-role (sin v1, como en Android)
     final uri = Uri.parse('${Constants.baseUrl}/api/Pull/by-role')
         .replace(queryParameters: {
@@ -27,7 +28,7 @@ class PullService {
         'Accept': 'application/json',
       },
     );
-    
+
     print('Response status: ${res.statusCode}');
     print('Response body: ${res.body}');
 
@@ -65,7 +66,7 @@ class PullService {
         'role': role,
         'userId': userId.toString(),
       });
-      
+
       print('Intentando con /v1: ${uri2.toString()}');
       final res2 = await _client.get(
         uri2,
@@ -74,10 +75,10 @@ class PullService {
           'Accept': 'application/json',
         },
       );
-      
+
       print('Response status (v1): ${res2.statusCode}');
       print('Response body (v1): ${res2.body}');
-      
+
       if (res2.statusCode == 200) {
         final body2 = res2.body.trim();
         List<dynamic> itemsList2;
@@ -119,5 +120,59 @@ class PullService {
       return t;
     }
   }
-}
+  // Agregar al final de la clase PullService
 
+  Future<void> updatePullState(String token, int pullId, String newState) async {
+    final uri = Uri.parse('${Constants.baseUrl}/api/Pull/$pullId/state');
+
+    developer.log('Actualizando estado del pull $pullId a $newState', name: 'PullService');
+
+    final res = await _client.put(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'state': newState}),
+    );
+
+    developer.log('Response status: ${res.statusCode}', name: 'PullService');
+
+    if (res.statusCode == 200 || res.statusCode == 204) {
+      return;
+    }
+
+    if (res.statusCode == 401) {
+      throw Exception('No autorizado.');
+    }
+
+    throw Exception('Error al actualizar estado: ${res.statusCode}');
+  }
+
+  Future<void> updatePullPrice(String token, int pullId, double newPrice) async {
+    final uri = Uri.parse('${Constants.baseUrl}/api/Pull/$pullId/price');
+
+    developer.log('Actualizando precio del pull $pullId a \$$newPrice', name: 'PullService');
+
+    final res = await _client.put(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'priceUpdate': newPrice}),
+    );
+
+    developer.log('Response status: ${res.statusCode}', name: 'PullService');
+
+    if (res.statusCode == 200 || res.statusCode == 204) {
+      return;
+    }
+
+    if (res.statusCode == 401) {
+      throw Exception('No autorizado.');
+    }
+
+    throw Exception('Error al actualizar precio: ${res.statusCode}');
+  }
+}

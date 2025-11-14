@@ -1,8 +1,8 @@
 import 'dart:convert';
 import '../../domain/model/pull.dart';
 import '../remote/pull_service.dart';
-import '../remote/pull_dto.dart';
 import '../../../user/data/repository/user_repository.dart';
+import 'dart:developer' as developer;  // ⬅️ AGREGA ESTA LÍNEA SI NO EXISTE
 
 class PullRepository {
   final PullService _remote;
@@ -63,22 +63,54 @@ class PullRepository {
         throw Exception('ID de usuario inválido: $sellerIdStr');
       }
 
-      print('🔍 Buscando pulls para sellerId: $sellerId con role: seller');
+      developer.log('🔍 Buscando pulls para sellerId: $sellerId con role: seller', name: 'PullRepository');
       final dtos = await _remote.getPullsByRole(user.token, 'seller', sellerId);
-      print('✅ Pulls encontrados: ${dtos.length}');
-      
+      developer.log('✅ Pulls encontrados: ${dtos.length}', name: 'PullRepository');
+
       if (dtos.isEmpty) {
-        print('⚠️ No se encontraron pulls para sellerId: $sellerId');
+        developer.log('⚠️ No se encontraron pulls para sellerId: $sellerId', name: 'PullRepository');
       } else {
-        print('📋 Pulls: ${dtos.map((d) => 'ID=${d.id}, sellerId=${d.sellerId}, gigId=${d.gigId}').join(', ')}');
+        developer.log('📋 Pulls: ${dtos.map((d) => 'ID=${d.id}, sellerId=${d.sellerId}, gigId=${d.gigId}').join(', ')}', name: 'PullRepository');
       }
-      
+
       return dtos.map((dto) => dto.toDomain()).toList();
     } catch (e, stackTrace) {
-      print('❌ Error en getPullsBySellerId: $e');
-      print('Stack trace: $stackTrace');
+      developer.log('❌ Error en getPullsBySellerId', name: 'PullRepository', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  // ⬇️⬇️⬇️ AGREGA ESTOS DOS MÉTODOS NUEVOS ⬇️⬇️⬇️
+
+  Future<void> updatePullState(int pullId, String newState) async {
+    try {
+      final user = await _userRepository.getCachedUser();
+      if (user == null) {
+        throw Exception('No hay sesión de usuario. Por favor, inicia sesión.');
+      }
+
+      developer.log('🔄 Actualizando estado del pull $pullId a $newState', name: 'PullRepository');
+      await _remote.updatePullState(user.token, pullId, newState);
+      developer.log('✅ Estado actualizado correctamente', name: 'PullRepository');
+    } catch (e, stackTrace) {
+      developer.log('❌ Error en updatePullState', name: 'PullRepository', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<void> updatePullPrice(int pullId, double newPrice) async {
+    try {
+      final user = await _userRepository.getCachedUser();
+      if (user == null) {
+        throw Exception('No hay sesión de usuario. Por favor, inicia sesión.');
+      }
+
+      developer.log('💰 Actualizando precio del pull $pullId a \$$newPrice', name: 'PullRepository');
+      await _remote.updatePullPrice(user.token, pullId, newPrice);
+      developer.log('✅ Precio actualizado correctamente', name: 'PullRepository');
+    } catch (e, stackTrace) {
+      developer.log('❌ Error en updatePullPrice', name: 'PullRepository', error: e, stackTrace: stackTrace);
       rethrow;
     }
   }
 }
-

@@ -1,4 +1,9 @@
-enum PullState { pending, accepted, canceled }
+enum PullState {
+  pending,      // "pending"
+  inProcess,    // "in_process"
+  complete,     // "complete"
+  canceled      // "canceled"
+}
 
 class Pull {
   final int id;

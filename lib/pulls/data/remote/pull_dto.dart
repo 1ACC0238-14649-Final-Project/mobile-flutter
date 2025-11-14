@@ -35,12 +35,14 @@ class PullDto {
     switch (state.toLowerCase()) {
       case 'pending':
         return PullState.pending;
-      case 'accepted':
-        return PullState.accepted;
+      case 'in_process':
+        return PullState.inProcess;
+      case 'complete':
+        return PullState.complete;
       case 'canceled':
         return PullState.canceled;
       default:
-        return PullState.pending;
+        return PullState.pending; //estado por defecto
     }
   }
 
