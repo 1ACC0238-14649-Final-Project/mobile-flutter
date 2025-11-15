@@ -3,6 +3,7 @@ import '../data/repository/pull_repository.dart';
 import '../domain/model/pull.dart';
 import '../../gigs/data/repository/gig_repository.dart';
 import '../../gigs/domain/model/gig.dart';
+import 'pull_details_screen.dart';
 import 'dart:developer' as developer;
 
 class MyPullsScreen extends StatefulWidget {
@@ -197,7 +198,7 @@ class _MyPullsScreenState extends State<MyPullsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
               // Grid de 2 columnas
               GridView.builder(
                 shrinkWrap: true,
@@ -227,176 +228,193 @@ class _MyPullsScreenState extends State<MyPullsScreen> {
     final gigImage = gig?.image;
     final gigCategory = gig?.category;
 
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Imagen del gig
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Container(
-              height: 100,
-              width: double.infinity,
-              color: Colors.grey[300],
-              child: (gigImage != null && gigImage.isNotEmpty)
-                  ? Image.network(
-                gigImage,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[300],
-                    child: Icon(
-                      Icons.image_not_supported,
-                      size: 48,
-                      color: Colors.grey[600],
-                    ),
-                  );
-                },
-              )
-                  : Container(
+    return GestureDetector(
+      onTap: () {
+        // Navegar a la pantalla de detalles
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PullDetailsScreen(
+              pull: pull,
+              gig: gig,
+            ),
+          ),
+        ).then((_) {
+          // Recargar la lista cuando regrese de detalles
+          _loadPulls();
+        });
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Imagen del gig
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              child: Container(
+                height: 100,
+                width: double.infinity,
                 color: Colors.grey[300],
-                child: Icon(
-                  Icons.image_not_supported,
-                  size: 48,
-                  color: Colors.grey[600],
+                child: (gigImage != null && gigImage.isNotEmpty)
+                    ? Image.network(
+                  gigImage,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 48,
+                        color: Colors.grey[600],
+                      ),
+                    );
+                  },
+                )
+                    : Container(
+                  color: Colors.grey[300],
+                  child: Icon(
+                    Icons.image_not_supported,
+                    size: 48,
+                    color: Colors.grey[600],
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // Contenido del card
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Estado del pull con icono
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _getStateColor(pull.state).withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: _getStateColor(pull.state).withValues(alpha: 0.3),
-                      width: 1,
+            // Contenido del card
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Estado del pull con icono
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 3,
                     ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        _getStateIcon(pull.state),
-                        size: 10,
-                        color: _getStateColor(pull.state),
+                    decoration: BoxDecoration(
+                      color: _getStateColor(pull.state).withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: _getStateColor(pull.state).withValues(alpha: 0.3),
+                        width: 1,
                       ),
-                      const SizedBox(width: 3),
-                      Text(
-                        _getStateText(pull.state),
-                        style: TextStyle(
-                          color: _getStateColor(pull.state),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 8,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 4),
-
-                // Título del gig
-                Text(
-                  gig?.title ?? 'Gig #${pull.gigId}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                const SizedBox(height: 2),
-
-                // Descripción del gig
-                if (gig != null && gig.description.isNotEmpty)
-                  Text(
-                    gig.description,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey[600],
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                const SizedBox(height: 4),
-
-                // Categoría y precio
-                Builder(
-                  builder: (context) {
-                    final hasCategory = gigCategory != null && gigCategory.isNotEmpty;
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (hasCategory) ...[
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 5,
-                                vertical: 3,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                gigCategory,
-                                style: const TextStyle(
-                                  fontSize: 8,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                        ],
-                        Expanded(
-                          flex: hasCategory ? 3 : 1,
-                          child: Text(
-                            'From \$${pull.priceUpdate.toStringAsFixed(0)}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.right,
+                        Icon(
+                          _getStateIcon(pull.state),
+                          size: 10,
+                          color: _getStateColor(pull.state),
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          _getStateText(pull.state),
+                          style: TextStyle(
+                            color: _getStateColor(pull.state),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 8,
                           ),
                         ),
                       ],
-                    );
-                  },
-                ),
-              ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  // Título del gig
+                  Text(
+                    gig?.title ?? 'Gig #${pull.gigId}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  const SizedBox(height: 2),
+
+                  // Descripción del gig
+                  if (gig != null && gig.description.isNotEmpty)
+                    Text(
+                      gig.description,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey[600],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                  const SizedBox(height: 4),
+
+                  // Categoría y precio
+                  Builder(
+                    builder: (context) {
+                      final hasCategory = gigCategory != null && gigCategory.isNotEmpty;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (hasCategory) ...[
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  gigCategory,
+                                  style: const TextStyle(
+                                    fontSize: 8,
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                          ],
+                          Expanded(
+                            flex: hasCategory ? 3 : 1,
+                            child: Text(
+                              'From \$${pull.priceUpdate.toStringAsFixed(0)}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'dart:convert';
 import '../../domain/model/pull.dart';
 import '../remote/pull_service.dart';
 import '../../../user/data/repository/user_repository.dart';
-import 'dart:developer' as developer;  // ⬅️ AGREGA ESTA LÍNEA SI NO EXISTE
+import 'dart:developer' as developer;
 
 class PullRepository {
   final PullService _remote;
