@@ -49,18 +49,10 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await _pullRepository.updatePullPrice(_currentPull.id, newPrice);
+      final updatedPull = await _pullRepository.updatePullPrice(_currentPull.id, newPrice);
 
       setState(() {
-        _currentPull = Pull(
-          id: _currentPull.id,
-          sellerId: _currentPull.sellerId,
-          buyerId: _currentPull.buyerId,
-          gigId: _currentPull.gigId,
-          priceInit: _currentPull.priceInit,
-          priceUpdate: newPrice,
-          state: _currentPull.state,
-        );
+        _currentPull = updatedPull;
         _isPriceEditing = false;
         _isLoading = false;
       });
@@ -84,18 +76,10 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await _pullRepository.updatePullState(_currentPull.id, 'canceled');
+      final updatedPull = await _pullRepository.updatePullState(_currentPull.id, 'canceled');
 
       setState(() {
-        _currentPull = Pull(
-          id: _currentPull.id,
-          sellerId: _currentPull.sellerId,
-          buyerId: _currentPull.buyerId,
-          gigId: _currentPull.gigId,
-          priceInit: _currentPull.priceInit,
-          priceUpdate: _currentPull.priceUpdate,
-          state: PullState.canceled,
-        );
+        _currentPull = updatedPull;
         _isLoading = false;
       });
 
@@ -118,18 +102,10 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await _pullRepository.updatePullState(_currentPull.id, 'in_process');
+      final updatedPull = await _pullRepository.updatePullState(_currentPull.id, 'in_process');
 
       setState(() {
-        _currentPull = Pull(
-          id: _currentPull.id,
-          sellerId: _currentPull.sellerId,
-          buyerId: _currentPull.buyerId,
-          gigId: _currentPull.gigId,
-          priceInit: _currentPull.priceInit,
-          priceUpdate: _currentPull.priceUpdate,
-          state: PullState.inProcess,
-        );
+        _currentPull = updatedPull;
         _isLoading = false;
       });
 
@@ -212,17 +188,14 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
           : SingleChildScrollView(
         child: Column(
           children: [
-            // Sección superior blanca con precios y botones
             Container(
               color: Colors.white,
               padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Fila de precios (Initial y Actual en horizontal)
                   Row(
                     children: [
-                      // Precio Inicial
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,7 +222,6 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
 
                       const SizedBox(width: 24),
 
-                      // Precio Actual
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,7 +299,6 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
 
                   const SizedBox(height: 24),
 
-                  // Botón de editar precio o botones de guardar/cancelar (CENTRADO)
                   if (_currentPull.state == PullState.pending) ...[
                     if (_isPriceEditing)
                       Row(
@@ -382,7 +353,6 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
 
                     const SizedBox(height: 32),
 
-                    // Texto de pregunta
                     const Text(
                       '¿Desea aceptar el pull?',
                       style: TextStyle(
@@ -394,10 +364,8 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
 
                     const SizedBox(height: 20),
 
-                    // Botones Cancel y Accept en la misma fila
                     Row(
                       children: [
-                        // Botón Cancel
                         Expanded(
                           child: OutlinedButton(
                             onPressed: _cancelPull,
@@ -426,7 +394,6 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
 
                         const SizedBox(width: 12),
 
-                        // Botón Accept
                         Expanded(
                           child: ElevatedButton(
                             onPressed: _acceptPull,
@@ -457,14 +424,12 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
               ),
             ),
 
-            // Sección del Gig
             Container(
               color: Colors.grey[100],
               padding: const EdgeInsets.all(16),
               child: _buildGigInfo(),
             ),
 
-            // Sección del Chat (placeholder)
             Container(
               color: Colors.white,
               padding: const EdgeInsets.all(16),
@@ -514,7 +479,6 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
       ),
       child: Row(
         children: [
-          // Imagen del gig
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Container(
@@ -543,7 +507,6 @@ class _PullDetailsScreenState extends State<PullDetailsScreen> {
 
           const SizedBox(width: 16),
 
-          // Información del gig
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
