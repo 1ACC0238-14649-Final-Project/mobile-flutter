@@ -1,0 +1,9 @@
+# Ejemplo de archivo key.properties
+# Copia este archivo a key.properties y completa con tus valores reales
+# IMPORTANTE: key.properties NO debe subirse a Git (ya está en .gitignore)
+
+storePassword=TU_PASSWORD_AQUI
+keyPassword=TU_PASSWORD_AQUI
+keyAlias=upload
+storeFile=/ruta/completa/a/tu/upload-keystore.jks
+

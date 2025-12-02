@@ -1,0 +1,32 @@
+
+
+
+{
+  "project_info": {
+    "project_number": "407474889900",
+    "project_id": "gigu-flutter-3952d",
+    "storage_bucket": "gigu-flutter-3952d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407474889900:android:81072afceab575fcd12b09",
+        "android_client_info": {
+          "package_name": "com.gigu.flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQOHHWt_g8JCXLhnNtk_q_wR_VGv9-sIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

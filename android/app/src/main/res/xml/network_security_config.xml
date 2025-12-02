@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Permitir conexiones HTTPS a todos los dominios -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Confiar en certificados del sistema -->
+            <certificates src="system" />
+            <!-- Confiar en certificados de usuario (para desarrollo) -->
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Configuración específica para tu backend -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">gigu-backend-webapp-hzbrd3guaghphmam.canadacentral-01.azurewebsites.net</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>
+
