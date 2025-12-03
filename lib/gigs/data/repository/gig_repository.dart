@@ -12,15 +12,15 @@ class GigRepository {
       : _remote = remote ?? GigService(),
         _userRepository = userRepository ?? UserRepository();
 
-  /// Extrae el userId del JWT token
+  /// Extracts the userId from JWT token
   String? _getUserIdFromToken(String token) {
     try {
       final parts = token.split('.');
       if (parts.length != 3) return null;
 
-      // Decodificar el payload (segunda parte del JWT)
+      // Decode the payload (second part of the JWT)
       final payload = parts[1];
-      // Agregar padding si es necesario para Base64URL
+     // Add padding if necessary for Base64URL
       var normalizedPayload = payload;
       final remainder = payload.length % 4;
       if (remainder > 0) {
@@ -31,7 +31,7 @@ class GigRepository {
       final decodedString = utf8.decode(decodedBytes);
       final jsonPayload = jsonDecode(decodedString) as Map<String, dynamic>;
 
-      // Extraer el sid (user ID) del claim
+      // Extract the sid (user ID) from the claim
       const sidClaim = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid';
       if (jsonPayload.containsKey(sidClaim)) {
         return jsonPayload[sidClaim]?.toString();
@@ -50,13 +50,13 @@ class GigRepository {
     List<String> tags = const [],
     double? price,
   }) async {
-    // Obtener el token del usuario actual
+    // Get the current user's token
     final user = await _userRepository.getCachedUser();
     if (user == null) {
       throw Exception('No user session. Please login first.');
     }
 
-    // Extraer el sellerId del token JWT
+    // Extract the sellerId from the JWT token
     final sellerId = _getUserIdFromToken(user.token);
     if (sellerId == null) {
       throw Exception('No se pudo obtener el ID del usuario desde el token. Por favor, inicia sesión nuevamente.');
@@ -84,7 +84,7 @@ class GigRepository {
   }
 
   Future<List<Gig>> getGigsBySeller(int sellerId) async {
-    // Obtener el token del usuario actual
+    // Get the current user's token
     final user = await _userRepository.getCachedUser();
     if (user == null) {
       throw Exception('No user session. Please login first.');
@@ -102,7 +102,7 @@ class GigRepository {
   }
 
   Future<Gig> getGigById(String gigId) async {
-    // Obtener el token del usuario actual
+    // Get the current user's token
     final user = await _userRepository.getCachedUser();
     if (user == null) {
       throw Exception('No user session. Please login first.');
